@@ -20,22 +20,33 @@ FCM will be a Markov model
 
 k = 2 # window size
 
-txt = "ABBAABABBB" # imaginar AA antes
+txt = "BABBAABABBB" # imaginar AA antes
 
 alphabet = "AB"
 
 from itertools import product
+from math import log2
+
 d = {"".join(p): {c : 0 for c in alphabet} for p in product(alphabet, repeat=k)}
 print(d)
 
-pos = k # TODO: pos = 0 e imaginar AA antes
-current = txt[pos-k:pos] #AB
+ptr = 0
+estimated_number_of_bits = 0
+smoothing_factor = 1
 
-while pos < len(txt):
-    next_char = txt[pos]
-    d[current][next_char] += 1
-    current = current[1:] + next_char
-    pos += 1
+while ptr < len(txt):
+    # Context and symbol
+    context = alphabet[0] * (k - ptr) + txt[:ptr] if ptr - k < 0 else txt[ptr - k:ptr]
+    print(context)
+    symbol = txt[ptr]
+
+    # Incremental probability estimation
+    prob = (d[context][symbol] + smoothing_factor) / (sum(d[context].values()) + smoothing_factor * len(alphabet))
+    estimated_number_of_bits = -log2(prob)
+    
+    # Update table
+    d[context][symbol] += 1
+    ptr += 1
 
 print(d)
 
