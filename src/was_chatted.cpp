@@ -67,14 +67,15 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                 requiredArgs.insert('s');
                 break;
             case 'h':
-                cout << "Usage: ./was_chatted -n rh_file_path -r rc_file_path -t t_file_path -k markov_model_order -s smoothing_factor" << endl
-                     << "Options:" << endl
-                     << " (-h) Help: shows how to use the program" << endl
-                     << " (-n) Filename: Path to the file containing the text not rewritten by ChatGPT (string) (required)" << endl
-                     << " (-r) Filename: Path to the file containing the text rewritten by ChatGPT (string) (required)" << endl
-                     << " (-t) Filename: Path to the file containing the text under analysis (string) (required)" << endl
-                     << " (-k) Markov model order: Order of the Markov model (int) (required)" << endl
-                     << " (-s) Smoothing factor: Parameter to smooth the first probability estimation (double) (required)" << endl;
+                cout << "Usage: ./was_chatted REQUIRED OPTIONAL" << endl
+                     << "Required arguments:" << endl
+                     << " -n rh_file_path       : path to the file containing the text not rewritten by ChatGPT (string)" << endl
+                     << " -r rc_file_path       : path to the file containing the text rewritten by ChatGPT (string)" << endl
+                     << " -t t_file_path        : path to the file containing the text under analysis (string)" << endl
+                     << " -k markov_model_order : order of the Markov model (int)" << endl
+                     << " -s smoothing_factor   : parameter to smooth the first probability estimation (double)" << endl
+                     << "Optional arguments:" << endl
+                     << " -h                    : shows how to use the program" << endl;
                 exit(EXIT_SUCCESS);
             case '?':
                 if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's') {
