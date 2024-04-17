@@ -56,7 +56,7 @@ int main()
 
 */
 
-#include "MarkovModel.h"
+#include "markow_model.h"
 
 using namespace std;
 
