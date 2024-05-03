@@ -22,9 +22,9 @@ private:
     double smoothingFactor;
     unordered_map<string, unordered_map<char, unsigned int>> table;
 
-    void saveTableToCache(const string &cachePath);
+    void saveTableToCache();
 
-    bool loadTableFromCache(const string &cachePath);
+    bool loadTableFromCache();
 };
 
 #endif //TAI_ASSIGNMENT2_GROUP8_MARKOV_MODEL_H

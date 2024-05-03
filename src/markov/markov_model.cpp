@@ -16,9 +16,7 @@ unsigned int MarkovModel::getMarkovModelOrder() const {
 }
 
 void MarkovModel::load() {
-    string cachePath = filePath + ".cache";
-
-    if (!loadTableFromCache(cachePath)) {
+    if (!loadTableFromCache()) {
         FileReader fileReader = FileReader(filePath);
         fileReader.read();
 
@@ -30,20 +28,24 @@ void MarkovModel::load() {
             context = context.substr(1) + event;
         }
 
-        saveTableToCache(cachePath);
+        saveTableToCache();
     }
 }
 
-void MarkovModel::saveTableToCache(const string &cachePath) {
-    ofstream file(cachePath);
-    for (auto &[context, eventCount]: table) {
-        for (auto &[event, count]: eventCount) {
-            file << context << " " << event << " " << count << endl;
+void MarkovModel::saveTableToCache() {
+    string cachePath = filePath + ".order" + to_string(markovModelOrder) + ".cache";
+    ofstream file(cachePath, ios::binary);
+    for (auto &[context, events]: table) {
+        for (auto &[event, count]: events) {
+            file.write(context.c_str(), markovModelOrder);
+            file.write(&event, 1);
+            file.write(reinterpret_cast<const char *>(&count), sizeof(count));
         }
     }
 }
 
-bool MarkovModel::loadTableFromCache(const string &cachePath) {
+bool MarkovModel::loadTableFromCache() {
+    string cachePath = filePath + ".order" + to_string(markovModelOrder) + ".cache";
     ifstream file(cachePath);
     if (!file.is_open()) {
         return false;
@@ -51,7 +53,10 @@ bool MarkovModel::loadTableFromCache(const string &cachePath) {
     string context;
     char event;
     unsigned int count;
-    while (file >> context >> event >> count) {
+    while (!file.eof()) {
+        file.read(&context[0], markovModelOrder);
+        file.read(&event, 1);
+        file.read(reinterpret_cast<char *>(&count), sizeof(count));
         table[context][event] = count;
     }
     return true;
