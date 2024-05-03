@@ -14,11 +14,11 @@ int main(int argc, char *argv[]) {
          << args << endl;
 
     // load model of text not rewritten by ChatGPT
-    MarkovModel rhModel = MarkovModel(args.rhFilePath, args.markovModelOrder, args.smoothingFactor);
+    MarkovModel rhModel = MarkovModel(args.rhFilePath, args.markovModelOrder, args.smoothingFactor, args.reduceFactor);
     rhModel.load();
 
     // load model of text rewritten by ChatGPT
-    MarkovModel rcModel = MarkovModel(args.rcFilePath, args.markovModelOrder, args.smoothingFactor);
+    MarkovModel rcModel = MarkovModel(args.rcFilePath, args.markovModelOrder, args.smoothingFactor, args.reduceFactor);
     rcModel.load();
 
     // load analyser of text under analysis

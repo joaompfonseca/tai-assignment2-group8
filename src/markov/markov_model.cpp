@@ -1,14 +1,16 @@
 #include <fstream>
+#include <climits>
 #include "markov_model.h"
 #include "../util/file_reader.h"
 
 using namespace std;
 
-MarkovModel::MarkovModel(string filePath, unsigned int markovModelOrder, double smoothingFactor) {
+MarkovModel::MarkovModel(string filePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor) {
     this->filePath = filePath;
     this->markovModelOrder = markovModelOrder;
     this->smoothingFactor = smoothingFactor;
-    this->table = unordered_map<string, unordered_map<char, unsigned int>>();
+    this->reduceFactor = reduceFactor;
+    this->table = unordered_map<string, unordered_map<char, unsigned long>>();
 }
 
 unsigned int MarkovModel::getMarkovModelOrder() const {
@@ -25,9 +27,11 @@ void MarkovModel::load() {
         string context = string(markovModelOrder, ' '); // initial context are white spaces
         for (char event: content) {
             table[context][event]++;
+            if (table[context][event] == ULONG_MAX) {
+                reduceTable(); // reduce table to avoid overflow
+            }
             context = context.substr(1) + event;
         }
-
         saveTableToCache();
     }
 }
@@ -46,13 +50,13 @@ void MarkovModel::saveTableToCache() {
 
 bool MarkovModel::loadTableFromCache() {
     string cachePath = filePath + ".order" + to_string(markovModelOrder) + ".cache";
-    ifstream file(cachePath);
+    ifstream file(cachePath, ios::binary);
     if (!file.is_open()) {
         return false;
     }
     string context;
     char event;
-    unsigned int count;
+    unsigned long count;
     while (!file.eof()) {
         file.read(&context[0], markovModelOrder);
         file.read(&event, 1);
@@ -62,10 +66,22 @@ bool MarkovModel::loadTableFromCache() {
     return true;
 }
 
+void MarkovModel::reduceTable() {
+    for (auto &[context, events]: table) {
+        for (auto &[event, count]: events) {
+            table[context][event] = count / reduceFactor;
+        }
+    }
+}
+
 double MarkovModel::getProbability(char event, string context) {
-    unsigned int count_e_given_c = table[context][event];
-    unsigned int count_all_given_c = 0;
+    unsigned long count_e_given_c = table[context][event];
+    unsigned long count_all_given_c = 0;
     for (auto &[e, count]: table[context]) {
+        if (count_all_given_c >= ULONG_MAX - count) {
+            count_e_given_c /= reduceFactor;
+            count_all_given_c /= reduceFactor;
+        }
         count_all_given_c += count;
     }
     return (count_e_given_c + smoothingFactor) / (count_all_given_c + smoothingFactor * markovModelOrder);

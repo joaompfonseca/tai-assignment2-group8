@@ -49,6 +49,18 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                 }
                 requiredArgs.insert('s');
                 break;
+            case 'd':
+                try {
+                    int arg = stoi(optarg);
+                    if (arg <= 0) {
+                        throw invalid_argument(nullptr);
+                    }
+                    args.reduceFactor = arg;
+                } catch (const invalid_argument &e) {
+                    cerr << "Error: Reduce factor (-d) must be an integer greater than 0." << endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
             case 'h':
                 cout << "Usage: ./was_chatted REQUIRED OPTIONAL" << endl
                      << "Required arguments:" << endl
@@ -58,10 +70,11 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                      << " -k markov_model_order : order of the Markov model (int)" << endl
                      << " -s smoothing_factor   : parameter to smooth the first probability estimation (double)" << endl
                      << "Optional arguments:" << endl
-                     << " -h                    : shows how to use the program" << endl;
+                     << " -h                    : shows how to use the program" << endl
+                     << " -d reduce_factor      : factor to reduce the counts of the Markov model (int, default is 2)" << endl;
                 exit(EXIT_SUCCESS);
             case '?':
-                if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's') {
+                if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's' || optopt == 'd') {
                     cerr << "Option -" << static_cast<char>(optopt) << " requires an argument." << endl;
                 } else {
                     cerr << "Unknown option -" << static_cast<char>(optopt) << endl;

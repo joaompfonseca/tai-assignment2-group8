@@ -11,6 +11,7 @@ struct ProgramArguments {
     string tFilePath; // text under analysis
     unsigned int markovModelOrder{};
     double smoothingFactor{};
+    unsigned int reduceFactor = 2;
 
     // overload the << operator to print the program arguments
     friend ostream &operator<<(ostream &os, const ProgramArguments &args) {
@@ -19,6 +20,7 @@ struct ProgramArguments {
         os << "(-t) Text under analysis file path: " << args.tFilePath << endl;
         os << "(-k) Markov model order: " << args.markovModelOrder << endl;
         os << "(-s) Smoothing factor: " << args.smoothingFactor << endl;
+        os << "(-d) Reduce factor: " << args.reduceFactor;
         return os;
     }
 };
