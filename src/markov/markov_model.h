@@ -21,6 +21,10 @@ private:
     unsigned int markovModelOrder;
     double smoothingFactor;
     unordered_map<string, unordered_map<char, unsigned int>> table;
+
+    void saveTableToCache(const string &cachePath);
+
+    bool loadTableFromCache(const string &cachePath);
 };
 
 #endif //TAI_ASSIGNMENT2_GROUP8_MARKOV_MODEL_H
