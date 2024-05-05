@@ -33,6 +33,7 @@ It's optional, since you can use the provided executable inside the `bin` direct
 #### Optional arguments
 
 - `-h`: shows how to use the program.
+- `-d reduce_factor`: factor to reduce the counts of the Markov model to prevent overflow (int, default is 2).
 
 #### Example
 

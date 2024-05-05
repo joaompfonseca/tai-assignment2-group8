@@ -71,7 +71,7 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                      << " -s smoothing_factor   : parameter to smooth the first probability estimation (double)" << endl
                      << "Optional arguments:" << endl
                      << " -h                    : shows how to use the program" << endl
-                     << " -d reduce_factor      : factor to reduce the counts of the Markov model (int, default is 2)" << endl;
+                     << " -d reduce_factor      : factor to reduce the counts of the Markov model to prevent overflow (int, default is 2)" << endl;
                 exit(EXIT_SUCCESS);
             case '?':
                 if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's' || optopt == 'd') {
