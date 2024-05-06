@@ -10,6 +10,8 @@ add_executable(was_chatted src/was_chatted.cpp
         src/markov/markov_model.h
         src/util/file_reader.h
         src/util/file_reader.cpp
+        src/util/csv_logger.h
+        src/util/csv_logger.cpp
         src/markov/markov_model.cpp
         src/markov/markov_analyser.cpp
         src/markov/markov_analyser.h)

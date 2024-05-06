@@ -9,6 +9,7 @@ struct ProgramArguments {
     string rhFilePath; // text not rewritten by ChatGPT
     string rcFilePath; // text rewritten by ChatGPT
     string tFilePath; // text under analysis
+    string logFilePath = ""; // log file path
     unsigned int markovModelOrder{};
     double smoothingFactor{};
     unsigned int reduceFactor = 2;

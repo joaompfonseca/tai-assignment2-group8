@@ -1,5 +1,6 @@
 #include <iostream>
 #include "util/program_arguments.h"
+#include "util/csv_logger.h"
 #include "markov/markov_model.h"
 #include "markov/markov_analyser.h"
 
@@ -30,9 +31,16 @@ int main(int argc, char *argv[]) {
     double rcEstimatedBps = tAnalyser.getEstimatedBps(rcModel);
 
     cout << "Not rewritten by ChatGPT: " << rhEstimatedBps << " bps" << endl;
-    cout << "Rewritten by ChatGPT: " << rcEstimatedBps << " bps" << endl;
+    cout << "Rewritten by ChatGPT: " << rcEstimatedBps << " bps" << endl << endl;
 
     cout << "Result: text was probably " << ((rhEstimatedBps < rcEstimatedBps) ? "not " : "") << "rewritten by ChatGPT" << endl;
+
+    // create CSV logger (if args.logFilePath is not empty)
+    if (!args.logFilePath.empty()) {
+        CSVLogger logger = CSVLogger(args.logFilePath);
+        logger.append({to_string(rhEstimatedBps), to_string(rcEstimatedBps), ((rhEstimatedBps < rcEstimatedBps) ? "0" : "1")});
+    }
+
 
     return EXIT_SUCCESS;
 }

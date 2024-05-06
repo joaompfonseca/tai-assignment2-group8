@@ -9,7 +9,7 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
     ProgramArguments args;
     unordered_set<char> requiredArgs;
     int opt;
-    while ((opt = getopt(argc, argv, "n:r:t:k:s:h")) != -1) {
+    while ((opt = getopt(argc, argv, "n:r:t:k:l:s:h")) != -1) {
         switch (opt) {
             case 'n':
                 args.rhFilePath = optarg;
@@ -61,6 +61,14 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                     exit(EXIT_FAILURE);
                 }
                 break;
+            case 'l':
+                try {
+                    args.logFilePath = optarg;
+                } catch (const invalid_argument &e) {
+                    cerr << "Error: Log file path (-l) must be a string." << endl;
+                    exit(EXIT_FAILURE);
+                }
+                break;
             case 'h':
                 cout << "Usage: ./was_chatted REQUIRED OPTIONAL" << endl
                      << "Required arguments:" << endl
@@ -71,10 +79,11 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                      << " -s smoothing_factor   : parameter to smooth the first probability estimation (double)" << endl
                      << "Optional arguments:" << endl
                      << " -h                    : shows how to use the program" << endl
-                     << " -d reduce_factor      : factor to reduce the counts of the Markov model to prevent overflow (int, default is 2)" << endl;
+                     << " -d reduce_factor      : factor to reduce the counts of the Markov model to prevent overflow (int, default is 2)" << endl
+                     << " -l log_file_path      : path to the file where the log will be written (string)" << endl;
                 exit(EXIT_SUCCESS);
             case '?':
-                if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's' || optopt == 'd') {
+                if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's' || optopt == 'd' || optopt == 'l') {
                     cerr << "Option -" << static_cast<char>(optopt) << " requires an argument." << endl;
                 } else {
                     cerr << "Unknown option -" << static_cast<char>(optopt) << endl;
