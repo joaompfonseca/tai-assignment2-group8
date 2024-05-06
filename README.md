@@ -37,7 +37,7 @@ It's optional, since you can use the provided executable inside the `bin` direct
 
 #### Example
 
-`./was_chatted ...`
+`./was_chatted -n ../example/no.txt -r ../example/yes.txt -t ../example/test.txt -k 6 -s 0.1`
 
 ## Authors
 

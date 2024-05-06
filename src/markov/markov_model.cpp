@@ -54,7 +54,7 @@ bool MarkovModel::loadTableFromCache() {
     if (!file.is_open()) {
         return false;
     }
-    string context;
+    string context = string(markovModelOrder, ' ');
     char event;
     unsigned long count;
     while (!file.eof()) {
