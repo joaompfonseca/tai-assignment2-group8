@@ -1,11 +1,11 @@
 .idea
 cmake-build-debug
+example
 
+datasets/raw/*
+datasets/out/*
 *.pdf
-references/*
 
 # exclude all files in the bin directory except 'was_chatted'
 bin/*
 !bin/was_chatted
-
-example/
