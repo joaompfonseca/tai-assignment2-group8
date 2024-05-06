@@ -23,8 +23,7 @@ if __name__ == "__main__":
     if not os.path.exists("out"):
         os.makedirs("out")
 
-    for size in sizes:
-        with open(f"out/wiki_intro.txt", "w") as f:
-            f.write("\n".join(wiki_intro_lst[:size]))
-        with open(f"out/gene_intro.txt", "w") as f:
-            f.write("\n".join(gene_intro_lst[:size]))
+    with open(f"out/wiki_intro.txt", "w") as f:
+        f.write("\n".join(wiki_intro_lst))
+    with open(f"out/gene_intro.txt", "w") as f:
+        f.write("\n".join(gene_intro_lst))
