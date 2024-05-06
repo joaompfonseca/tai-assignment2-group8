@@ -2,8 +2,6 @@
 cmake-build-debug
 example
 
-datasets/raw/*
-datasets/out/*
 *.pdf
 
 # exclude all files in the bin directory except 'was_chatted'

@@ -1,1 +1,5 @@
-raw/open-gpt-text
+out/*
+!out/.gitkeep
+
+raw/*
+!raw/.gitkeep
