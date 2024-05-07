@@ -1,29 +1,22 @@
 import pandas as pd
+from sklearn.model_selection import train_test_split, KFold
 import os
 
-if __name__ == "__main__":
+os.makedirs("out/wiki", exist_ok=True)
+os.makedirs("out/wiki/train", exist_ok=True)
 
-    wiki_intro_lst = []
-    gene_intro_lst = []
+df = pd.read_parquet("raw/gpt-wiki-intro.parquet")
+num_samples = df.shape[0]
 
-    df = pd.read_parquet("raw/gpt-wiki-intro.parquet")
+texts = pd.concat([df["wiki_intro"], df["generated_intro"]], axis=0)
+df = pd.DataFrame({"text": texts, "label": [0]*num_samples + [1]*num_samples})
+df["text"] = df["text"].str.lower()
 
-    for row in df.itertuples():
-        wiki_intro = row.wiki_intro
-        gene_intro = row.generated_intro
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+test_df.to_csv("out/wiki/test.csv", index=False)
 
-        # Remove line breaks
-        wiki_intro = wiki_intro.replace("\n", " ")
-        gene_intro = gene_intro.replace("\n", " ")
+# create kfold splits
+kf = KFold(n_splits=10, shuffle=True, random_state=42)
 
-        wiki_intro_lst.append(wiki_intro)
-        gene_intro_lst.append(gene_intro)
-
-    # Save to separate files
-    if not os.path.exists("out"):
-        os.makedirs("out")
-
-    with open(f"out/wiki_intro.txt", "w") as f:
-        f.write("\n".join(wiki_intro_lst))
-    with open(f"out/gene_intro.txt", "w") as f:
-        f.write("\n".join(gene_intro_lst))
+for i, (train_idx, val_idx) in enumerate(kf.split(train_df)):
+    train_df.iloc[val_idx].to_csv(f"out/wiki/train/fold_{i}.csv", index=False)
