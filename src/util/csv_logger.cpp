@@ -6,6 +6,10 @@ CSVLogger::CSVLogger(string filename) {
     file.open(filePath, ios::out | ios::app); // open file in append mode
 }
 
+CSVLogger::CSVLogger() {
+    this->filePath = "";
+}
+
 void CSVLogger::append(vector<string> values) {
     for (int i = 0; i < (int) values.size(); i++) {
         file << values[i];

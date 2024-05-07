@@ -2,6 +2,7 @@
 #define TAI_ASSIGNMENT2_GROUP8_MARKOV_ANALYSER_H
 
 #include <iostream>
+#include <vector>
 #include "markov_model.h"
 
 using namespace std;
@@ -14,9 +15,15 @@ public:
 
     double getEstimatedBps(MarkovModel &model);
 
+    bool hasNextLine();
+
+    void incrementLine();
+
 private:
     string filePath;
-    string content;
+    vector<string> content;
+    int line;
+    int content_size;
 };
 
 #endif //TAI_ASSIGNMENT2_GROUP8_MARKOV_ANALYSER_H

@@ -26,21 +26,27 @@ int main(int argc, char *argv[]) {
     MarkovAnalyser tAnalyser = MarkovAnalyser(args.tFilePath);
     tAnalyser.load();
 
-    // estimate the bps of the text under analysis on both models
-    double rhEstimatedBps = tAnalyser.getEstimatedBps(rhModel);
-    double rcEstimatedBps = tAnalyser.getEstimatedBps(rcModel);
-
-    cout << "Not rewritten by ChatGPT: " << rhEstimatedBps << " bps" << endl;
-    cout << "Rewritten by ChatGPT: " << rcEstimatedBps << " bps" << endl << endl;
-
-    cout << "Result: text was probably " << ((rhEstimatedBps < rcEstimatedBps) ? "not " : "") << "rewritten by ChatGPT" << endl;
-
-    // create CSV logger (if args.logFilePath is not empty)
+    CSVLogger logger;
     if (!args.logFilePath.empty()) {
-        CSVLogger logger = CSVLogger(args.logFilePath);
-        logger.append({to_string(rhEstimatedBps), to_string(rcEstimatedBps), ((rhEstimatedBps < rcEstimatedBps) ? "0" : "1")});
+       logger = CSVLogger(args.logFilePath);
     }
 
+    while (tAnalyser.hasNextLine()) {
+        // estimate the bps of the text under analysis on both models
+        double rhEstimatedBps = tAnalyser.getEstimatedBps(rhModel);
+        double rcEstimatedBps = tAnalyser.getEstimatedBps(rcModel);
+
+        cout << "Not rewritten by ChatGPT: " << rhEstimatedBps << " bps" << endl;
+        cout << "Rewritten by ChatGPT: " << rcEstimatedBps << " bps" << endl << endl;
+
+        cout << "Result: text was probably " << ((rhEstimatedBps < rcEstimatedBps) ? "not " : "") << "rewritten by ChatGPT" << endl;
+    
+        if (!args.logFilePath.empty()) {
+            logger.append({to_string(rhEstimatedBps), to_string(rcEstimatedBps), ((rhEstimatedBps < rcEstimatedBps) ? "0" : "1")});
+        }
+
+        tAnalyser.incrementLine();
+    }
 
     return EXIT_SUCCESS;
 }

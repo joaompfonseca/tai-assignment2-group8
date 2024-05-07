@@ -10,6 +10,7 @@ using namespace std;
 class CSVLogger {
 public:
     CSVLogger(string filename);
+    CSVLogger();
     void append(vector<string> values);
     void close();
 

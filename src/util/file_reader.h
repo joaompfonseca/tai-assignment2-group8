@@ -17,6 +17,8 @@ public:
 
     unordered_set<char> getAlphabet();
 
+    vector<string> readLines();
+
 private:
     string filePath;
     string content;

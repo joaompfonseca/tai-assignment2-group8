@@ -27,6 +27,20 @@ string FileReader::getContent() {
     return this->content;
 }
 
+vector<string> FileReader::readLines() {
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cerr << "Unable to open file: " << filePath << endl;
+        exit(EXIT_FAILURE);
+    }
+    vector<string> lines;
+    string line;
+    while (getline(file, line)) {
+        lines.push_back(line);
+    }
+    return lines;
+}
+
 unordered_set<char> FileReader::getAlphabet() {
     return this->alphabet;
 }
