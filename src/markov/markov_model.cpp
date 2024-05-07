@@ -12,7 +12,7 @@ MarkovModel::MarkovModel(string filePath, string alphabetFilePath, unsigned int 
     this->smoothingFactor = smoothingFactor;
     this->reduceFactor = reduceFactor;
     this->alphabetSize = 0;
-    this->table = unordered_map<string, unordered_map<char, unsigned long>>();
+    this->table = unordered_map<string, unordered_map<char, unsigned int>>();
 }
 
 unsigned int MarkovModel::getMarkovModelOrder() const {
@@ -27,10 +27,10 @@ void MarkovModel::load() {
         alphabetSize = fileReader.getAlphabet().size();
 
         string content = fileReader.getContent();
-        string context = string(markovModelOrder, ' '); // initial context are white spaces
-        for (char event: content) {
+        string context = content.substr(0, markovModelOrder);
+        for (char event: content.substr(markovModelOrder)) {
             table[context][event]++;
-            if (table[context][event] == ULONG_MAX) {
+            if (table[context][event] == UINT32_MAX) {
                 reduceTable(); // reduce table to avoid overflow
             }
             context = context.substr(1) + event;
@@ -85,14 +85,14 @@ void MarkovModel::reduceTable() {
 }
 
 double MarkovModel::getProbability(char event, string context) {
-    unsigned long count_e_given_c = table[context][event];
-    unsigned long count_all_given_c = 0;
+    unsigned int count_e_given_c = table[context][event];
+    unsigned int count_all_given_c = 0;
     for (auto &[e, count]: table[context]) {
-        if (count_all_given_c >= ULONG_MAX - count) {
+        if (count_all_given_c >= UINT32_MAX - count) {
             count_e_given_c /= reduceFactor;
             count_all_given_c /= reduceFactor;
         }
         count_all_given_c += count;
     }
-    return (count_e_given_c + smoothingFactor) / (count_all_given_c + smoothingFactor * alphabetSize);
+    return ((double) count_e_given_c + smoothingFactor) / ((double) count_all_given_c + smoothingFactor * (double) alphabetSize);
 }

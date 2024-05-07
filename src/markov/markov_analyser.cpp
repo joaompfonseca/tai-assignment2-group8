@@ -33,10 +33,10 @@ double MarkovAnalyser::getEstimatedBps(MarkovModel &model) {
     string txt = content[line];
     
     double estimatedBps = 0;
-    string context = string(model.getMarkovModelOrder(), ' '); // initial context are white spaces
-    for (char c: txt) {
+    string context = txt.substr(0, model.getMarkovModelOrder());
+    for (char c: txt.substr(model.getMarkovModelOrder())) {
         estimatedBps += -log2(model.getProbability(c, context));
         context = context.substr(1) + c;
     }
-    return estimatedBps / (double) txt.size();
+    return estimatedBps / (double) (txt.size() - model.getMarkovModelOrder());
 }
