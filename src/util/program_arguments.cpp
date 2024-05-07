@@ -80,7 +80,7 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                      << "Optional arguments:" << endl
                      << " -h                    : shows how to use the program" << endl
                      << " -d reduce_factor      : factor to reduce the counts of the Markov model to prevent overflow (int, default is 2)" << endl
-                     << " -l log_file_path      : path to the file where the log will be written (string)" << endl;
+                     << " -l log_file_path      : path to the file where the log will be written (string, default is empty)" << endl;
                 exit(EXIT_SUCCESS);
             case '?':
                 if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'a' || optopt == 'k' || optopt == 's' || optopt == 'd' || optopt == 'l') {
