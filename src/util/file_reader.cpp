@@ -31,7 +31,6 @@ void FileReader::read() {
         exit(EXIT_FAILURE);
     }
     while (file.get(c)) {
-        c = tolower(c);
         if (this->alphabet.find(c) == this->alphabet.end()) {
             continue;
         }
@@ -64,7 +63,6 @@ vector<string> FileReader::readLines() {
     while (getline(file, line)) {
         normalizedLine = "";
         for (char cl: line) {
-            cl = tolower(cl);
             if (this->alphabet.find(cl) == this->alphabet.end()) {
                 continue;
             }

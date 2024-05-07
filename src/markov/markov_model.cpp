@@ -72,6 +72,7 @@ bool MarkovModel::loadTableFromCache() {
         file.read(reinterpret_cast<char *>(&count), sizeof(count));
         table[context][event] = count;
     }
+    cout << "Loaded model from " << cachePath << endl;
     return true;
 }
 
