@@ -9,7 +9,7 @@ using namespace std;
 
 class MarkovAnalyser {
 public:
-    MarkovAnalyser(string filePath);
+    MarkovAnalyser(string filePath, string alphabetFilePath);
 
     void load();
 
@@ -21,9 +21,10 @@ public:
 
 private:
     string filePath;
+    string alphabetFilePath;
     vector<string> content;
-    int line;
-    int content_size;
+    unsigned int line;
+    unsigned int content_size;
 };
 
 #endif //TAI_ASSIGNMENT2_GROUP8_MARKOV_ANALYSER_H

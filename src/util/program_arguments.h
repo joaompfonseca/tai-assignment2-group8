@@ -9,19 +9,22 @@ struct ProgramArguments {
     string rhFilePath; // text not rewritten by ChatGPT
     string rcFilePath; // text rewritten by ChatGPT
     string tFilePath; // text under analysis
-    string logFilePath = ""; // log file path
+    string alphabetFilePath; // considered alphabet
     unsigned int markovModelOrder{};
     double smoothingFactor{};
     unsigned int reduceFactor = 2;
+    string logFilePath; // log file
 
     // overload the << operator to print the program arguments
     friend ostream &operator<<(ostream &os, const ProgramArguments &args) {
         os << "(-n) Text not rewritten by ChatGPT file path: " << args.rhFilePath << endl;
         os << "(-r) Text rewritten by ChatGPT file path: " << args.rcFilePath << endl;
         os << "(-t) Text under analysis file path: " << args.tFilePath << endl;
+        os << "(-a) Alphabet file path: " << args.alphabetFilePath << endl;
         os << "(-k) Markov model order: " << args.markovModelOrder << endl;
         os << "(-s) Smoothing factor: " << args.smoothingFactor << endl;
-        os << "(-d) Reduce factor: " << args.reduceFactor;
+        os << "(-d) Reduce factor: " << args.reduceFactor << endl;
+        os << "(-l) Log file path: " << args.logFilePath;
         return os;
     }
 };

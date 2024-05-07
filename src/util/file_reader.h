@@ -9,7 +9,7 @@ using namespace std;
 
 class FileReader {
 public:
-    FileReader(string filename);
+    FileReader(string filePath, string alphabetFilePath);
 
     void read();
 
@@ -21,6 +21,7 @@ public:
 
 private:
     string filePath;
+    string alphabetFilePath;
     string content;
     unordered_set<char> alphabet;
 };

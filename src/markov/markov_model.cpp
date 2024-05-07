@@ -5,8 +5,9 @@
 
 using namespace std;
 
-MarkovModel::MarkovModel(string filePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor) {
+MarkovModel::MarkovModel(string filePath, string alphabetFilePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor) {
     this->filePath = filePath;
+    this->alphabetFilePath = alphabetFilePath;
     this->markovModelOrder = markovModelOrder;
     this->smoothingFactor = smoothingFactor;
     this->reduceFactor = reduceFactor;
@@ -20,7 +21,7 @@ unsigned int MarkovModel::getMarkovModelOrder() const {
 
 void MarkovModel::load() {
     if (!loadTableFromCache()) {
-        FileReader fileReader = FileReader(filePath);
+        FileReader fileReader = FileReader(filePath, alphabetFilePath);
         fileReader.read();
 
         alphabetSize = fileReader.getAlphabet().size();
