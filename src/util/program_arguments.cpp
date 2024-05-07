@@ -9,7 +9,7 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
     ProgramArguments args;
     unordered_set<char> requiredArgs;
     int opt;
-    while ((opt = getopt(argc, argv, "n:r:t:k:l:s:h")) != -1) {
+    while ((opt = getopt(argc, argv, "n:r:t:a:k:s:d:l:h")) != -1) {
         switch (opt) {
             case 'n':
                 args.rhFilePath = optarg;
@@ -22,6 +22,10 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
             case 't':
                 args.tFilePath = optarg;
                 requiredArgs.insert('t');
+                break;
+            case 'a':
+                args.alphabetFilePath = optarg;
+                requiredArgs.insert('a');
                 break;
             case 'k':
                 try {
@@ -62,12 +66,7 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                 }
                 break;
             case 'l':
-                try {
-                    args.logFilePath = optarg;
-                } catch (const invalid_argument &e) {
-                    cerr << "Error: Log file path (-l) must be a string." << endl;
-                    exit(EXIT_FAILURE);
-                }
+                args.logFilePath = optarg;
                 break;
             case 'h':
                 cout << "Usage: ./was_chatted REQUIRED OPTIONAL" << endl
@@ -75,15 +74,16 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
                      << " -n rh_file_path       : path to the file containing the text not rewritten by ChatGPT (string)" << endl
                      << " -r rc_file_path       : path to the file containing the text rewritten by ChatGPT (string)" << endl
                      << " -t t_file_path        : path to the file containing the text under analysis (string)" << endl
+                     << " -a alphabet_file_path : path to the file containing the considered alphabet (string)" << endl
                      << " -k markov_model_order : order of the Markov model (int)" << endl
                      << " -s smoothing_factor   : parameter to smooth the first probability estimation (double)" << endl
                      << "Optional arguments:" << endl
                      << " -h                    : shows how to use the program" << endl
                      << " -d reduce_factor      : factor to reduce the counts of the Markov model to prevent overflow (int, default is 2)" << endl
-                     << " -l log_file_path      : path to the file where the log will be written (string)" << endl;
+                     << " -l log_file_path      : path to the file where the log will be written (string, default is empty)" << endl;
                 exit(EXIT_SUCCESS);
             case '?':
-                if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'k' || optopt == 's' || optopt == 'd' || optopt == 'l') {
+                if (optopt == 'n' || optopt == 'r' || optopt == 't' || optopt == 'a' || optopt == 'k' || optopt == 's' || optopt == 'd' || optopt == 'l') {
                     cerr << "Option -" << static_cast<char>(optopt) << " requires an argument." << endl;
                 } else {
                     cerr << "Unknown option -" << static_cast<char>(optopt) << endl;
@@ -94,7 +94,7 @@ ProgramArguments getProgramArguments(int argc, char *argv[]) {
         }
     }
     // Ensure that required options are provided
-    for (char requiredArg: {'n', 'r', 't', 'k', 's'}) {
+    for (char requiredArg: {'n', 'r', 't', 'a', 'k', 's'}) {
         if (requiredArgs.find(requiredArg) == requiredArgs.end()) {
             cerr << "Error: Option -" << requiredArg << " is required." << endl;
             exit(EXIT_FAILURE);

@@ -5,11 +5,13 @@
 
 using namespace std;
 
-MarkovModel::MarkovModel(string filePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor) {
+MarkovModel::MarkovModel(string filePath, string alphabetFilePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor) {
     this->filePath = filePath;
+    this->alphabetFilePath = alphabetFilePath;
     this->markovModelOrder = markovModelOrder;
     this->smoothingFactor = smoothingFactor;
     this->reduceFactor = reduceFactor;
+    this->alphabetSize = 0;
     this->table = unordered_map<string, unordered_map<char, unsigned long>>();
 }
 
@@ -19,11 +21,12 @@ unsigned int MarkovModel::getMarkovModelOrder() const {
 
 void MarkovModel::load() {
     if (!loadTableFromCache()) {
-        FileReader fileReader = FileReader(filePath);
+        FileReader fileReader = FileReader(filePath, alphabetFilePath);
         fileReader.read();
 
-        string content = fileReader.getContent();
+        alphabetSize = fileReader.getAlphabet().size();
 
+        string content = fileReader.getContent();
         string context = string(markovModelOrder, ' '); // initial context are white spaces
         for (char event: content) {
             table[context][event]++;
@@ -39,6 +42,9 @@ void MarkovModel::load() {
 void MarkovModel::saveTableToCache() {
     string cachePath = filePath + ".order" + to_string(markovModelOrder) + ".cache";
     ofstream file(cachePath, ios::binary);
+    // save alphabet size
+    file.write(reinterpret_cast<const char *>(&alphabetSize), sizeof(alphabetSize));
+    // save table
     for (auto &[context, events]: table) {
         for (auto &[event, count]: events) {
             file.write(context.c_str(), markovModelOrder);
@@ -54,6 +60,9 @@ bool MarkovModel::loadTableFromCache() {
     if (!file.is_open()) {
         return false;
     }
+    // read alphabet size
+    file.read(reinterpret_cast<char *>(&alphabetSize), sizeof(alphabetSize));
+    // read table
     string context = string(markovModelOrder, ' ');
     char event;
     unsigned long count;
@@ -84,5 +93,5 @@ double MarkovModel::getProbability(char event, string context) {
         }
         count_all_given_c += count;
     }
-    return (count_e_given_c + smoothingFactor) / (count_all_given_c + smoothingFactor * markovModelOrder);
+    return (count_e_given_c + smoothingFactor) / (count_all_given_c + smoothingFactor * alphabetSize);
 }

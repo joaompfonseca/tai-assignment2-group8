@@ -8,7 +8,7 @@ using namespace std;
 
 class MarkovModel {
 public:
-    MarkovModel(string filePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor);
+    MarkovModel(string filePath, string alphabetFilePath, unsigned int markovModelOrder, double smoothingFactor, unsigned int reduceFactor);
 
     unsigned int getMarkovModelOrder() const;
 
@@ -18,9 +18,11 @@ public:
 
 private:
     string filePath;
+    string alphabetFilePath;
     unsigned int markovModelOrder;
     double smoothingFactor;
     unsigned int reduceFactor;
+    unsigned int alphabetSize;
     unordered_map<string, unordered_map<char, unsigned long>> table;
 
     void saveTableToCache();

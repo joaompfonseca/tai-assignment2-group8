@@ -6,14 +6,16 @@
 
 using namespace std;
 
-MarkovAnalyser::MarkovAnalyser(string filePath) {
+MarkovAnalyser::MarkovAnalyser(string filePath, string alphabetFilePath) {
     this->filePath = filePath;
+    this->alphabetFilePath = alphabetFilePath;
     this->content = vector<string>();
     this->line = 0;
+    this->content_size = 0;
 }
 
 void MarkovAnalyser::load() {
-    FileReader fileReader = FileReader(filePath);
+    FileReader fileReader = FileReader(filePath, alphabetFilePath);
     content = fileReader.readLines();
     this->content_size = content.size();
 }

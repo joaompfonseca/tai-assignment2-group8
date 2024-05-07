@@ -15,15 +15,15 @@ int main(int argc, char *argv[]) {
          << args << endl;
 
     // load model of text not rewritten by ChatGPT
-    MarkovModel rhModel = MarkovModel(args.rhFilePath, args.markovModelOrder, args.smoothingFactor, args.reduceFactor);
+    MarkovModel rhModel = MarkovModel(args.rhFilePath, args.alphabetFilePath, args.markovModelOrder, args.smoothingFactor, args.reduceFactor);
     rhModel.load();
 
     // load model of text rewritten by ChatGPT
-    MarkovModel rcModel = MarkovModel(args.rcFilePath, args.markovModelOrder, args.smoothingFactor, args.reduceFactor);
+    MarkovModel rcModel = MarkovModel(args.rcFilePath, args.alphabetFilePath, args.markovModelOrder, args.smoothingFactor, args.reduceFactor);
     rcModel.load();
 
     // load analyser of text under analysis
-    MarkovAnalyser tAnalyser = MarkovAnalyser(args.tFilePath);
+    MarkovAnalyser tAnalyser = MarkovAnalyser(args.tFilePath, args.alphabetFilePath);
     tAnalyser.load();
 
     CSVLogger logger;
