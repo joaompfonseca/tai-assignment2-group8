@@ -1,11 +1,18 @@
 import json
 import os
 import pandas as pd
-from sklearn.model_selection import train_test_split, KFold
+import numpy as np
 import os
 
 os.makedirs("out/open-gpt", exist_ok=True)
 os.makedirs("out/open-gpt/train", exist_ok=True)
+os.makedirs("out/open-gpt/val", exist_ok=True)
+
+os.makedirs("out/open-gpt/train/0", exist_ok=True)
+os.makedirs("out/open-gpt/train/1", exist_ok=True)
+
+os.makedirs("out/open-gpt/val/0", exist_ok=True)
+os.makedirs("out/open-gpt/val/1", exist_ok=True)
 
 openweb_lst = []
 chatgpt_lst = []
@@ -32,16 +39,21 @@ openweb_df = pd.DataFrame({"text": openweb_lst, "label": 0})
 chatgpt_df = pd.DataFrame({"text": chatgpt_lst, "label": 1})
 
 min_samples = min(openweb_df.shape[0], chatgpt_df.shape[0])
-openweb_df = openweb_df.sample(n=min_samples, random_state=42)
+openweb_df = openweb_df.iloc[:min_samples]
 
-df = pd.concat([openweb_df, chatgpt_df], axis=0)
-df["text"] = df["text"].str.lower()
+for type, data in {"0": openweb_df, "1": chatgpt_df}.items():
+    data["text"] = data["text"].str.lower()
+    data["text"] = data["text"].str.replace("\n", " ")
 
-train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
-test_df.to_csv("out/open-gpt/test.csv", index=False)
+    train_size = int(0.8 * min_samples)
+    train_df, test_df = data.iloc[:train_size], data.iloc[train_size:]
+    np.savetxt(f"out/open-gpt/test{type}.txt", test_df["text"].values, fmt="%s")
 
-# create kfold splits
-kf = KFold(n_splits=10, shuffle=True, random_state=42)
+    # create kfold splits
+    splits = np.array_split(train_df["text"].values, 10)
 
-for i, (train_idx, val_idx) in enumerate(kf.split(train_df)):
-    train_df.iloc[val_idx].to_csv(f"out/open-gpt/train/fold_{i}.csv", index=False)
+    # iterate over splits, choose 1 split for validation, rest for training
+    for i, split in enumerate(splits):
+        train_folds = np.concatenate([splits[j] for j in range(10) if j != i])
+        np.savetxt(f"out/open-gpt/train/{type}/train{i}.txt", train_folds, fmt="%s")
+        np.savetxt(f"out/open-gpt/val/{type}/val{i}.txt", split, fmt="%s")
