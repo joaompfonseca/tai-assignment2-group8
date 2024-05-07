@@ -2,7 +2,7 @@
 
 ## Description
 
-...
+This second assignment's goal was to explore the usage of markov models for text classification. This repository contains the [report](report/report.pdf), and the source code and [executable](bin/was_chatted) of the `was_chatted` program. 
 
 **Course:** Algorithmic Theory of Information (2023/2024)
 
@@ -27,6 +27,7 @@ It's optional, since you can use the provided executable inside the `bin` direct
 - `-n rh_file_path`: path to the file containing the text not rewritten by ChatGPT (string).
 - `-r ch_file_path`: path to the file containing the text rewritten by ChatGPT (string).
 - `-t t_file_path`: path to the file containing the text under analysis (string).
+- `-a alphabet_file_path`: path to the file containing the considered alphabet (string).
 - `-k markov_model_order`: order of the Markov model (int).
 - `-s smoothing_factor`: parameter to smooth the first probability estimation (double).
 
@@ -34,10 +35,11 @@ It's optional, since you can use the provided executable inside the `bin` direct
 
 - `-h`: shows how to use the program.
 - `-d reduce_factor`: factor to reduce the counts of the Markov model to prevent overflow (int, default is 2).
+- `-l log_file_path`: path to the file where the log will be written (string, default is empty).
 
 #### Example
 
-`./was_chatted -n ../example/no.txt -r ../example/yes.txt -t ../example/test.txt -k 6 -s 0.1`
+`./was_chatted -n ../example/no.txt -r ../example/yes.txt -t ../example/test.txt -a ../example/alphabet.txt -k 6 -s 0.1`
 
 ## Authors
 
