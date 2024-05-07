@@ -21,6 +21,7 @@ private:
     unsigned int markovModelOrder;
     double smoothingFactor;
     unsigned int reduceFactor;
+    unsigned int alphabetSize;
     unordered_map<string, unordered_map<char, unsigned long>> table;
 
     void saveTableToCache();
