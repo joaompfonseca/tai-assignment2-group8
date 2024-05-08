@@ -77,7 +77,7 @@ bool MarkovModel::loadTableFromCache(string cacheFilePath) {
     // read table
     string context = string(markovModelOrder, ' ');
     char event;
-    unsigned long count;
+    unsigned int count;
     while (!file.eof()) {
         file.read(&context[0], markovModelOrder);
         file.read(&event, 1);
