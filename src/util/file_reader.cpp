@@ -4,81 +4,48 @@
 
 using namespace std;
 
-FileReader::FileReader(string filePath, string alphabetFilePath) {
+FileReader::FileReader(string filePath, unordered_set<char> alphabet) {
     this->filePath = filePath;
-    this->alphabetFilePath = alphabetFilePath;
-    this->content = "";
-    this->alphabet = {};
-}
-
-void FileReader::read() {
-    char c;
-
-    ifstream alphabetFile(alphabetFilePath);
-    if (!alphabetFile.is_open()) {
-        cerr << "Unable to open file: " << alphabetFilePath << endl;
-        exit(EXIT_FAILURE);
-    }
-    while (alphabetFile.get(c)) {
-        c = tolower(c);
-        this->alphabet.insert(c);
-    }
-    alphabetFile.close();
-
-    ifstream file(filePath);
-    if (!file.is_open()) {
-        cerr << "Unable to open file: " << filePath << endl;
-        exit(EXIT_FAILURE);
-    }
-    while (file.get(c)) {
-        if (this->alphabet.find(c) == this->alphabet.end()) {
-            continue;
-        }
-        this->content += c;
-    }
-    file.close();
-}
-
-vector<string> FileReader::readLines() {
-    vector<string> lines;
-    string line, normalizedLine;
-    char c;
-
-    ifstream alphabetFile(alphabetFilePath);
-    if (!alphabetFile.is_open()) {
-        cerr << "Unable to open file: " << alphabetFilePath << endl;
-        exit(EXIT_FAILURE);
-    }
-    while (alphabetFile.get(c)) {
-        c = tolower(c);
-        this->alphabet.insert(c);
-    }
-    alphabetFile.close();
-
-    ifstream file(filePath);
-    if (!file.is_open()) {
-        cerr << "Unable to open file: " << filePath << endl;
-        exit(EXIT_FAILURE);
-    }
-    while (getline(file, line)) {
-        normalizedLine = "";
-        for (char cl: line) {
-            if (this->alphabet.find(cl) == this->alphabet.end()) {
-                continue;
-            }
-            normalizedLine += cl;
-        }
-        lines.push_back(normalizedLine);
-    }
-    file.close();
-
-    return lines;
-}
-
-string FileReader::getContent() {
-    return this->content;
+    this->alphabet = alphabet;
+    this->lines = vector<string>();
 }
 
 unordered_set<char> FileReader::getAlphabet() {
     return this->alphabet;
+}
+
+vector<string> FileReader::getLines() {
+    return this->lines;
+}
+
+string FileReader::getContent() {
+    string content;
+    for (const string& line: lines) {
+        content += line;
+    }
+    return content;
+}
+
+void FileReader::read() {
+    bool createAlphabet = this->alphabet.empty();
+    string rawLine, parsedLine;
+
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cerr << "Unable to open file: " << filePath << endl;
+        exit(EXIT_FAILURE);
+    }
+    while (getline(file, rawLine)) {
+        parsedLine = "";
+        for (char c: rawLine) {
+            if (createAlphabet) {
+                this->alphabet.insert(c);
+            }
+            else if (this->alphabet.find(c) == this->alphabet.end()) {
+                continue;
+            }
+            parsedLine += c;
+        }
+        lines.push_back(parsedLine);
+    }
 }

@@ -9,21 +9,20 @@ using namespace std;
 
 class FileReader {
 public:
-    FileReader(string filePath, string alphabetFilePath);
-
-    void read();
-
-    string getContent();
+    explicit FileReader(string filePath, unordered_set<char> alphabet = {});
 
     unordered_set<char> getAlphabet();
 
-    vector<string> readLines();
+    vector<string> getLines();
+
+    string getContent();
+
+    void read();
 
 private:
     string filePath;
-    string alphabetFilePath;
-    string content;
     unordered_set<char> alphabet;
+    vector<string> lines;
 };
 
 #endif //TAI_ASSIGNMENT2_GROUP8_FILE_READER_H

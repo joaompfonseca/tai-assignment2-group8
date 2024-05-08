@@ -25,9 +25,9 @@ private:
     unsigned int alphabetSize;
     unordered_map<string, unordered_map<char, unsigned int>> table;
 
-    void saveTableToCache();
+    void saveTableToCache(string cacheFilePath);
 
-    bool loadTableFromCache();
+    bool loadTableFromCache(string cacheFilePath);
 
     void reduceTable();
 };

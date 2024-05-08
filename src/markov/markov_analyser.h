@@ -22,9 +22,8 @@ public:
 private:
     string filePath;
     string alphabetFilePath;
-    vector<string> content;
-    unsigned int line;
-    unsigned int content_size;
+    vector<string> lines;
+    unsigned int count;
 };
 
 #endif //TAI_ASSIGNMENT2_GROUP8_MARKOV_ANALYSER_H

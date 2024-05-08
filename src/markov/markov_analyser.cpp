@@ -1,6 +1,5 @@
 #include <cmath>
 #include <string>
-#include <iostream>
 #include "markov_analyser.h"
 #include "../util/file_reader.h"
 
@@ -9,28 +8,33 @@ using namespace std;
 MarkovAnalyser::MarkovAnalyser(string filePath, string alphabetFilePath) {
     this->filePath = filePath;
     this->alphabetFilePath = alphabetFilePath;
-    this->content = vector<string>();
-    this->line = 0;
-    this->content_size = 0;
+    this->lines = vector<string>();
+    this->count = 0;
 }
 
 void MarkovAnalyser::load() {
-    FileReader fileReader = FileReader(filePath, alphabetFilePath);
-    content = fileReader.readLines();
-    this->content_size = content.size();
+    // load alphabet
+    FileReader alphabetFileReader = FileReader(alphabetFilePath);
+    alphabetFileReader.read();
+
+    // load content to be analysed
+    FileReader fileReader = FileReader(filePath, alphabetFileReader.getAlphabet());
+    fileReader.read();
+
+    lines = fileReader.getLines();
 }
 
 bool MarkovAnalyser::hasNextLine() {
-    return line < content_size;
+    return count < lines.size();
 }
 
 void MarkovAnalyser::incrementLine() {
-    line++;
+    count++;
 }
 
 double MarkovAnalyser::getEstimatedBps(MarkovModel &model) {
     // fetch next line
-    string txt = content[line];
+    string txt = lines[count];
     
     double estimatedBps = 0;
     string context = txt.substr(0, model.getMarkovModelOrder());

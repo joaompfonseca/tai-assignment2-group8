@@ -1,5 +1,5 @@
 #include <fstream>
-#include <climits>
+#include <sstream>
 #include "markov_model.h"
 #include "../util/file_reader.h"
 
@@ -20,11 +20,29 @@ unsigned int MarkovModel::getMarkovModelOrder() const {
 }
 
 void MarkovModel::load() {
-    if (!loadTableFromCache()) {
-        FileReader fileReader = FileReader(filePath, alphabetFilePath);
-        fileReader.read();
+    // load alphabet
+    FileReader alphabetFileReader = FileReader(alphabetFilePath);
+    alphabetFileReader.read();
 
-        alphabetSize = fileReader.getAlphabet().size();
+    // generate hash of the alphabet file
+    hash<string> hasher;
+    size_t alphabetHash = hasher(alphabetFileReader.getContent());
+
+    // convert the hash into a hex string
+    stringstream ss;
+    ss << hex << alphabetHash;
+    string alphabetHashStr = ss.str();
+
+    // set the alphabet size
+    alphabetSize = alphabetFileReader.getAlphabet().size();
+
+    // name of the cache file
+    string cacheFilePath = filePath + "." + to_string(markovModelOrder) + "." +  alphabetHashStr + ".cache";
+
+    // load table from cache or generate it
+    if (!loadTableFromCache(cacheFilePath)) {
+        FileReader fileReader = FileReader(filePath, alphabetFileReader.getAlphabet());
+        fileReader.read();
 
         string content = fileReader.getContent();
         string context = content.substr(0, markovModelOrder);
@@ -35,15 +53,12 @@ void MarkovModel::load() {
             }
             context = context.substr(1) + event;
         }
-        saveTableToCache();
+        saveTableToCache(cacheFilePath);
     }
 }
 
-void MarkovModel::saveTableToCache() {
-    string cachePath = filePath + ".order" + to_string(markovModelOrder) + ".cache";
-    ofstream file(cachePath, ios::binary);
-    // save alphabet size
-    file.write(reinterpret_cast<const char *>(&alphabetSize), sizeof(alphabetSize));
+void MarkovModel::saveTableToCache(string cacheFilePath) {
+    ofstream file(cacheFilePath, ios::binary);
     // save table
     for (auto &[context, events]: table) {
         for (auto &[event, count]: events) {
@@ -54,14 +69,11 @@ void MarkovModel::saveTableToCache() {
     }
 }
 
-bool MarkovModel::loadTableFromCache() {
-    string cachePath = filePath + ".order" + to_string(markovModelOrder) + ".cache";
-    ifstream file(cachePath, ios::binary);
+bool MarkovModel::loadTableFromCache(string cacheFilePath) {
+    ifstream file(cacheFilePath, ios::binary);
     if (!file.is_open()) {
         return false;
     }
-    // read alphabet size
-    file.read(reinterpret_cast<char *>(&alphabetSize), sizeof(alphabetSize));
     // read table
     string context = string(markovModelOrder, ' ');
     char event;
@@ -72,7 +84,7 @@ bool MarkovModel::loadTableFromCache() {
         file.read(reinterpret_cast<char *>(&count), sizeof(count));
         table[context][event] = count;
     }
-    cout << "Loaded model from " << cachePath << endl;
+    cout << "Loaded model from " << cacheFilePath << endl;
     return true;
 }
 
