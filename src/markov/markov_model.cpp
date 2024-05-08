@@ -37,7 +37,7 @@ void MarkovModel::load() {
     alphabetSize = alphabetFileReader.getAlphabet().size();
 
     // name of the cache file
-    string cacheFilePath = filePath + "." + to_string(markovModelOrder) + "." +  alphabetHashStr + ".cache";
+    string cacheFilePath = filePath + "." + to_string(markovModelOrder) + "." + alphabetHashStr + ".cache";
 
     // load table from cache or generate it
     if (!loadTableFromCache(cacheFilePath)) {
@@ -45,8 +45,8 @@ void MarkovModel::load() {
         fileReader.read();
 
         string content = fileReader.getContent();
-        string context = content.substr(0, markovModelOrder);
-        for (char event: content.substr(markovModelOrder)) {
+        string context = string(markovModelOrder, ' ');
+        for (char event: content) {
             table[context][event]++;
             if (table[context][event] == UINT32_MAX) {
                 reduceTable(); // reduce table to avoid overflow

@@ -35,10 +35,10 @@ void MarkovAnalyser::incrementLine() {
 double MarkovAnalyser::getEstimatedBps(MarkovModel &model) {
     // fetch next line
     string txt = lines[count];
-    
+
     double estimatedBps = 0;
-    string context = txt.substr(0, model.getMarkovModelOrder());
-    for (char c: txt.substr(model.getMarkovModelOrder())) {
+    string context = string(model.getMarkovModelOrder(), ' ');
+    for (char c: txt) {
         estimatedBps += -log2(model.getProbability(c, context));
         context = context.substr(1) + c;
     }
