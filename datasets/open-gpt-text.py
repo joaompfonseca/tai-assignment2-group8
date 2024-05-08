@@ -42,7 +42,7 @@ min_samples = min(openweb_df.shape[0], chatgpt_df.shape[0])
 openweb_df = openweb_df.iloc[:min_samples]
 
 for type, data in {"0": openweb_df, "1": chatgpt_df}.items():
-    data["text"] = data["text"].str.lower()
+    # data["text"] = data["text"].str.lower()
     data["text"] = data["text"].str.replace("\n", " ")
 
     train_size = int(0.8 * min_samples)

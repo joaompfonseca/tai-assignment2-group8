@@ -15,8 +15,8 @@ df = pd.read_parquet("raw/gpt-wiki-intro.parquet")
 
 num_samples = df.shape[0]
 
-for type, data in {"1": df["wiki_intro"], "0": df["generated_intro"]}.items():
-    data = data.str.lower()
+for type, data in {"0": df["wiki_intro"], "1": df["generated_intro"]}.items():
+    # data = data.str.lower()
     data = data.str.replace("\n", " ")
 
     train_size = int(0.8 * num_samples)
