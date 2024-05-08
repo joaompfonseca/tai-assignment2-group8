@@ -4,12 +4,12 @@ for i in maxnumber:
 
     lines = []
 
-    with open('datasets/out/daigt/train/0/train0.txt', 'r') as file:
+    with open('out/daigt/train/0/train0.txt', 'r') as file:
         lines = file.readlines()
 
     char = 0
 
-    with open('datasets/out/daigt/train/0/train0-' + str(i) + '.txt', 'w') as file:
+    with open('out/daigt/train/0/train0-' + str(i) + '.txt', 'w') as file:
         for line in lines:
             c = len(line)
             char += c
@@ -22,12 +22,12 @@ for i in maxnumber:
 
     lines = []
 
-    with open('datasets/out/daigt/train/1/train0.txt', 'r') as file:
+    with open('out/daigt/train/1/train0.txt', 'r') as file:
         lines = file.readlines()
 
     char = 0
 
-    with open('datasets/out/daigt/train/1/train0-' + str(i) + '.txt', 'w') as file:
+    with open('out/daigt/train/1/train0-' + str(i) + '.txt', 'w') as file:
         for line in lines:
             c = len(line)
             char += c
@@ -35,5 +35,3 @@ for i in maxnumber:
                 file.write(line)
             else:
                 break
-
-

@@ -7,12 +7,12 @@ for maxlenght in maxlenghts:
     lines = []
 
     #Open the file
-    with open('datasets/out/daigt/run/run0.txt', 'r') as file:
+    with open('out/daigt/run/run0.txt', 'r') as file:
         lines = file.readlines()
 
     for i in range(0, len(lines)):
         if len(lines[i]) > maxlenght:
             lines[i] = lines[i][:maxlenght] + '\n'
 
-    with open('datasets/out/daigt/run/run0-' + str(maxlenght) +  '.txt', 'w') as file:
+    with open('out/daigt/run/run0-' + str(maxlenght) +  '.txt', 'w') as file:
         file.writelines(lines)
