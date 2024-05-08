@@ -8,7 +8,7 @@ This second assignment's goal was to explore the usage of markov models for text
 
 ## The `was_chatted` program
 
-The `was_chatted` program is a command-line tool that ...
+The `was_chatted` program is a command-line tool whose purpose is to accurately determine whether a text was rewritten or not by ChatGPT. It considers two reference texts: one not rewritten by ChatGPT, and another rewritten by ChatGPT. It uses Markov models to generate tables, one for each reference text. Using each table, one is able to estimate the number of bits per symbol a text under analysis would require to be compressed, for the corresponding reference text. If one considers that a lower number of bits per symbol represents a better encoding, therefore indicating a higher similarity with the reference text, by comparing the two values, it is possible to determine the likely origin of the text under analysis.
 
 ### Compile
 
